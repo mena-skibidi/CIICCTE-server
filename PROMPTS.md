@@ -27,3 +27,7 @@ yes (recuerda no cometas errores)
 ## Prompt 5
 
 done, you can begin
+
+## Prompt 6
+
+remove the option c thing from the readme, remove the prevous compose files from the individual folders, and make the compose unificado workflow the only one used across the project

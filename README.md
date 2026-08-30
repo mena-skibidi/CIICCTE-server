@@ -2,7 +2,7 @@
 
 ## Sobre el proyecto
 
-Software que funge como servidor para gestionar la abstraccion entre el frontend y los workspaces personales dentro del CIICCTE.
+Repositorio monolitico dedicado a la infraestructura de gestion del servidor mediante una interfaz web
 
 Este repositorio unifica los tres componentes que antes estaban separados:
 
@@ -32,14 +32,7 @@ Por motivos de documentacion, este es el stack de tecnologias usado para el desa
 ## Requisitos previos
 
 - docker y docker compose instalados
-- para el compose unificado no es necesario crear la red manualmente, la red `db-net` se crea automaticamente
-- para los composes individuales por subcarpeta si es necesario crear la red una vez:
-
-```bash
-docker network create db-net
-```
-
-Si `docker compose up` falla con `network db-net declared as external, but could not be found`, esa es la solucion.
+- la red `db-net` se crea automaticamente al iniciar el compose
 
 ## Como iniciar el proyecto
 
@@ -49,9 +42,9 @@ Si `docker compose up` falla con `network db-net declared as external, but could
 git clone https://github.com/mena-skibidi/CIICCTE-server
 ```
 
-### Opcion A: compose unificado (recomendado)
+### Como iniciar todos los servicios
 
-Levanta todos los servicios a la vez desde la raiz del proyecto:
+Levanta todo el stack desde la raiz del proyecto:
 
 ```bash
 docker compose up --build -d
@@ -80,7 +73,7 @@ Puertos:
 
 Para pgAdmin usar `admin@admin.com` / `admin321` y para agregar la base de datos usar hostname `db`, usuario `dbuser`, contrasena `labtest321`, base `labdb`.
 
-### Opcion B: servicios individuales desde el compose unificado
+### Como iniciar servicios individuales
 
 Desde la raiz se puede iniciar solo lo necesario:
 
@@ -112,25 +105,7 @@ Reiniciar un servicio:
 docker compose restart server
 ```
 
-### Opcion C: composes individuales por subcarpeta (compatibilidad)
-
-Cada subcarpeta conserva su `docker-compose.yaml` original con `external: true` para `db-net`. Requiere crear la red una vez:
-
-```bash
-docker network create db-net
-```
-
-Luego:
-
-```bash
-docker compose -f CIICCTE-server-DB/docker-compose.yaml up -d
-docker compose -f CIICCTE-server-backend-V2/docker-compose.yaml up --build -d
-docker compose -f CIICCTE-server-frontend/docker-compose.yaml up --build -d
-```
-
 ## Como detener los servicios
-
-### Compose unificado
 
 ```bash
 # detener sin borrar volumenes
@@ -149,31 +124,20 @@ Si se desea purgar o re-empezar el proyecto junto a los volumenes (perdida total
 docker compose down -v
 ```
 
-### Composes individuales
-
-```bash
-docker compose -f CIICCTE-server-DB/docker-compose.yaml down
-docker compose -f CIICCTE-server-DB/docker-compose.yaml down -v
-docker compose -f CIICCTE-server-backend-V2/docker-compose.yaml down
-docker compose -f CIICCTE-server-frontend/docker-compose.yaml down
-```
-
 ## Estructura del repositorio
 
 ```
 CIICCTE-server/
-  docker-compose.yaml              # compose unificado
+  docker-compose.yaml              # unico compose del proyecto
   README.md
   PROMPTS.md
   AGENTS.md
   CIICCTE-server-DB/
-    docker-compose.yaml            # compose individual (db + pgadmin)
     drawsql/
       v3.sql                       # solo para cargar diagramas en drawsql.app
       README.md
       drawSQL-image-export-2026-08-15.jpg
   CIICCTE-server-backend-V2/
-    docker-compose.yaml            # compose individual (server)
     dockerfile
     src/
       main.py
@@ -181,7 +145,6 @@ CIICCTE-server/
       datamodels.py
     bruno/
   CIICCTE-server-frontend/
-    docker-compose.yaml            # compose individual (frontend)
     dockerfile
     src/
       main.tsx

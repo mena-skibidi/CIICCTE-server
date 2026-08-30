@@ -6,34 +6,18 @@ Repo: `https://github.com/mena-skibidi/CIICCTE-server` (antes 3 repos separados 
 
 ## Structure
 
-- `docker-compose.yaml` — compose unificado que levanta todo el stack (db + pgadmin + backend + frontend) en la red `db-net`
+- `docker-compose.yaml` — unico compose del proyecto, levanta todo el stack (db + pgadmin + backend + frontend) en la red `db-net`
 - `README.md` — documentacion principal en espanol
 - `PROMPTS.md` — registro de prompts usados con agentes/LLMs
-- `CIICCTE-server-DB/` — Postgres + pgAdmin infraestructura (tambien conserva su `docker-compose.yaml` individual)
+- `CIICCTE-server-DB/` — Postgres + pgAdmin infraestructura y diagramas de referencia
   - `drawsql/v3.sql` — solo para cargar el diagrama en https://drawsql.app, no crea tablas
   - `drawsql/README.md` + `drawsql/drawSQL-image-export-2026-08-15.jpg` — diagrama grafico del esquema planeado
-- `CIICCTE-server-backend-V2/` — FastAPI + SQLModel backend (conserva su `docker-compose.yaml` individual)
-- `CIICCTE-server-frontend/` — React 19 + Vite 8 + Tailwind 4 frontend (conserva su `docker-compose.yaml` individual)
+- `CIICCTE-server-backend-V2/` — FastAPI + SQLModel backend
+- `CIICCTE-server-frontend/` — React 19 + Vite 8 + Tailwind 4 frontend
 
-Todos los servicios usan la red `db-net`. El compose unificado la crea automaticamente (sin `external: true`). Los composes individuales por subcarpeta la declaran como `external: true` y requieren `docker network create db-net` una vez.
+Todos los servicios usan la red `db-net` creada automaticamente por el compose unificado. No hay composes por subcarpeta.
 
 No hay CI, tests ni task runner en la raiz.
-
-## Prerequisite: red db-net
-
-Para el compose unificado no es necesario crear la red manualmente:
-
-```bash
-docker compose up --build -d   # crea db-net automaticamente si no existe
-```
-
-Para los composes individuales por subcarpeta si es necesario crearla una vez:
-
-```bash
-docker network create db-net
-```
-
-Si `docker compose up` falla con `network db-net declared as external, but could not be found`, esa es la solucion.
 
 ## Startup order (dependency chain)
 
@@ -42,7 +26,7 @@ Si `docker compose up` falla con `network db-net declared as external, but could
 3. **Frontend** ultimo
 
 ```bash
-# UNIFICADO (recomendado, desde la raiz):
+# UNIFICADO (desde la raiz):
 docker compose up --build -d
 docker compose logs -f
 docker compose down            # detener sin borrar volumenes
@@ -53,11 +37,6 @@ docker compose up db gui -d
 docker compose up server --build -d
 docker compose up frontend --build -d
 docker compose stop server
-
-# INDIVIDUAL por subcarpeta (composes originales, requieren db-net externa):
-docker compose -f CIICCTE-server-DB/docker-compose.yaml up -d
-docker compose -f CIICCTE-server-backend-V2/docker-compose.yaml up --build -d
-docker compose -f CIICCTE-server-frontend/docker-compose.yaml up --build -d
 ```
 
 Ports: DB `5432`, pgAdmin `8080` (`admin@admin.com` / `admin321`, hostname `db`), backend `8000` (`/docs`), frontend `5173`.
@@ -68,7 +47,7 @@ Ports: DB `5432`, pgAdmin `8080` (`admin@admin.com` / `admin321`, hostname `db`)
 - **Entrypoints:** `src/main.py:16` (FastAPI app `server`), `src/db.py` (SQLModel models `roles`/`users`, engine + `db_setup()` seed), `src/datamodels.py` (Pydantic DTOs)
 - **Active endpoints:** solo `GET /linux-server-details` (ejecuta `fastfetch --json` — requiere `fastfetch` en contenedor) y `GET /linux-users` (`pwd.getpwall()` filtrado a `uid >= 1000` excl. `65534`). Rutas CRUD/login en `src/main.py:27-45` estan comentadas.
 - **Docker:** `dockerfile:1` es `FROM nixos/nix` — instala `python314`, `fastfetch`, `uv` via `nix profile add`, luego `uv sync`. Build lento; no es imagen `python:slim`. Monta `/etc/passwd`, `/etc/group`, `/etc/shadow` read-only (`docker-compose.yaml:12-14`) asi que `/linux-users` refleja el host, no el contenedor.
-- **DB setup:** `db_setup()` (`src/db.py:29`) corre en evento `startup` — `create_all(checkfirst=True)` + seed de `roles` (admin/usuario) y usuario por defecto `admin/pwd123`. No hay Alembic/migraciones. Credenciales hardcodeadas y temporales (ver `CIICCTE-server-DB/docker-compose.yaml:7` y compose unificado).
+- **DB setup:** `db_setup()` (`src/db.py:29`) corre en evento `startup` — `create_all(checkfirst=True)` + seed de `roles` (admin/usuario) y usuario por defecto `admin/pwd123`. No hay Alembic/migraciones. Credenciales hardcodeadas y temporales (ver `docker-compose.yaml:7` del compose unificado).
 - **API test:** Bruno collection en `bruno/` (endpoints `get_linux_users.yml`, `linux_server_details.yml`, etc.)
 
 ## Frontend — `CIICCTE-server-frontend/`
@@ -80,16 +59,15 @@ Ports: DB `5432`, pgAdmin `8080` (`admin@admin.com` / `admin321`, hostname `db`)
 
 ## DB — `CIICCTE-server-DB/`
 
-- `docker-compose.yaml` — `postgres` (`ciiccte-db`) + `dpage/pgadmin4:9.17` (`db-gui`), ambos `restart: always`, volumenes `db`/`gui`.
+- `docker-compose.yaml` en raiz define `postgres` (`ciiccte-db`) + `dpage/pgadmin4:9.17` (`db-gui`), ambos `restart: always`, volumenes `db`/`gui`.
 - `drawsql/v3.sql` es solo para cargar el diseno en https://drawsql.app — no crea tablas. El diagrama grafico del esquema planeado (`roles`, `users`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) esta en `drawsql/README.md` y `drawsql/drawSQL-image-export-2026-08-15.jpg`. Las tablas reales se crean automaticamente via SQLModel ORM (`src/db.py:29` `db_setup()`).
-- Compose unificado en raiz replica los mismos servicios `db` y `gui` con la misma red `db-net` y volumenes.
 
 ## Conventions & gotchas
 
 - Documentacion en espanol; compose unificado en `docker-compose.yaml` en raiz.
 - Operaciones git ahora son en la raiz: `git status`, `git diff`, etc. Ya no hay 3 repos separados.
 - Backend `uv.lock` esta commiteado — despues de editar `pyproject.toml` correr `uv sync`/`uv lock` para mantenerlo sincronizado.
-- No hay archivos `.env` — todos los secretos estan hardcodeados para desarrollo local; no anadir carga de `.env` sin actualizar `src/db.py:24` y los `docker-compose.yaml`.
+- No hay archivos `.env` — todos los secretos estan hardcodeados para desarrollo local; no anadir carga de `.env` sin actualizar `src/db.py:24` y el `docker-compose.yaml`.
 - `PROMPTS.md` en mayusculas en la raiz registra el uso de IA.
 
 ## Registro de prompts con IA
