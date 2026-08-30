@@ -71,3 +71,19 @@ a) arregla el detalle de la comparacion que siempre regresa true pues lo que se 
 ## Prompt 16
 
 procede a ejecutar el plan
+
+## Prompt 17
+
+Genera el endpoint get para obtener a un usuario de la db con 2 opciones una con un datamodel donde se filtre por la id del usuario y otra donde se filtra por el username, en caso de que si exista un usuario con dicho id o username, se debera hacer un select * y regresar todos los detalles de ese usuario, tambien genera un endpoint get donde se regresen todos los usuarios junto a sus datos. Ademas genera pruebas de bruno para verificar que el endpoint individual funciona y tambien el endpoint de todos los usuarios. Para el endpoint individual de bruno genera 2 tests, una donde se busque la id de usuario 3 y otra donde se busque el username skibidi
+
+## Prompt 18
+
+La variante C suena bien, internamente se leeria el body de la request? y de ahi se leeria la id o username?
+
+## Prompt 19
+
+usa la variante A, cuando se haga el select * no regreses la contrasena, las tests de bruno deben ser para todos los usuarios, una con la id 3 y la otra con el username skibidi
+
+## Prompt 20
+
+si adelante

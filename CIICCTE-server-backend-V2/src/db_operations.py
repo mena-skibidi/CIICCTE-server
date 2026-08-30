@@ -67,3 +67,27 @@ def login_process_db(username: str, password: str):
             print("Usuario valido")
         else:
             print("Usuario invalido")
+
+
+def _to_public(user: users) -> dict:
+    return {
+        "id": user.id,
+        "username": user.username,
+        "nombre_completo": user.nombre_completo,
+        "account_status": user.account_status,
+        "roles_id": user.roles_id,
+    }
+
+
+def get_user_db(user_id: int | None = None, username: str | None = None):
+    with Session(engine) as session:
+        if user_id is not None:
+            statement = select(users).where(users.id == user_id)
+        else:
+            statement = select(users).where(users.username == username)
+        return session.exec(statement).first()
+
+
+def get_all_users_db():
+    with Session(engine) as session:
+        return list(session.exec(select(users)).all())
