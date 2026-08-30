@@ -1,0 +1,11 @@
+FROM nixos/nix
+RUN nix-channel --update
+RUN  mkdir -p /etc/nix/
+RUN touch /etc/nix/nix.conf
+RUN echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
+WORKDIR /usr/local/ciiccte-server-backend-v2
+COPY . ./
+RUN nix profile add nixpkgs#python314
+RUN nix profile add nixpkgs#fastfetch
+RUN nix profile add nixpkgs#uv
+RUN uv sync
