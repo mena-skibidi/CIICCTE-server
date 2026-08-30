@@ -1,19 +1,17 @@
 info:
-  name: post_user_admin
+  name: put_user_role_change
   type: http
-  seq: 1
+  seq: 9
 
 http:
-  method: POST
+  method: PUT
   url: http://localhost:8000/api/db/users
   body:
     type: json
     data: |-
       {
         "username": "tsahur",
-        "nombre_completo": "tung tung sahur",
-        "password": "1234",
-        "rol" : 2
+        "roles_id": 1
       }
   auth: inherit
 

@@ -39,20 +39,31 @@ def update_user_db(username: str, data: dict):
     with Session(engine) as session:
         statement = select(users).where(users.username == username)
         user = session.exec(statement).first()
-        if user:
-            if "rol" in data:
-                data["roles_id"] = data.pop("rol")
-            if "password" in data:
-                data["password_encriptada"] = data.pop("password")
-            data.pop("username", None)
+        if not user:
+            return None
+        # soportar tanto `rol` (legado) como `roles_id` (usado por bruno put_user_role_change)
+        if "rol" in data:
+            data["roles_id"] = data.pop("rol")
+        # validar rol si se modifica
+        if "roles_id" in data:
+            rol_id = data["roles_id"]
+            rol_exists = session.exec(select(roles).where(roles.id == rol_id)).first()
+            if not rol_exists:
+                raise ValueError(
+                    f"rol {rol_id} no existe (debe ser 1 admin o 2 usuario)"
+                )
+        if "password" in data:
+            data["password_encriptada"] = data.pop("password")
+        data.pop("username", None)
 
-            for key, value in data.items():
-                if hasattr(user, key):
-                    setattr(user, key, value)
+        for key, value in data.items():
+            if hasattr(user, key):
+                setattr(user, key, value)
 
-            session.add(user)
-            session.commit()
-            session.refresh(user)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+        return user
 
 
 def login_process_db(username: str, password: str):

@@ -15,18 +15,29 @@ router = APIRouter(prefix="/api/db", tags=["db"])
 
 @router.post("/users")
 def create_user(data: create_user_datamodel):
-    create_user_db(data.username, data.nombre_completo, data.password, data.rol)
+    try:
+        create_user_db(data.username, data.nombre_completo, data.password, data.rol)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"message": "usuario creado", "username": data.username}
 
 
 @router.delete("/users")
 def delete_user(username: str):
     delete_user_db(username)
+    return {"message": "usuario desactivado", "username": username}
 
 
 @router.put("/users")
 def update_user(data: update_user_datamodel):
     filtered_data = data.model_dump(exclude_unset=True)
-    update_user_db(data.username, filtered_data)
+    try:
+        updated = update_user_db(data.username, filtered_data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    if updated is None:
+        raise HTTPException(status_code=404, detail="usuario no encontrado")
+    return {"message": "usuario actualizado", "username": data.username}
 
 
 @router.post("/login")
