@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres
+    container_name: ciiccte-db
+    environment:
+      # Temporales, en produccion debemos trabajar con variables y no hardcodear los valores
+      POSTGRES_PASSWORD: labtest321
+      POSTGRES_USER: dbuser
+      POSTGRES_DB: labdb
+    volumes:
+      - db:/var/lib/postgresql/
+    ports:
+      - "5432:5432"
+    networks:
+      - db
+    restart: always
+
+  gui:
+    image: dpage/pgadmin4:9.17
+    container_name: db-gui
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin321
+    volumes:
+      - gui:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    networks:
+      - db
+    restart: always
+
+  server:
+    build:
+      context: ./CIICCTE-server-backend-V2
+      dockerfile: dockerfile
+    container_name: ciiccte-server
+    command: uv run fastapi dev src/main.py --host 0.0.0.0
+    ports:
+      - "8000:8000"
+    networks:
+      - db
+    volumes:
+      # Se cargan estos datos del host en modo read only para detectar a los usuarios
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./CIICCTE-server-frontend
+      dockerfile: dockerfile
+    container_name: ciccte-frontend
+    command: bun run dev --host
+    ports:
+      - "5173:5173"
+    networks:
+      - db
+    depends_on:
+      - server
+
+networks:
+  db:
+    name: db-net
+
+volumes:
+  db:
+  gui:
