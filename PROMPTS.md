@@ -59,3 +59,15 @@ usa /api/x
 ## Prompt 13
 
 comienza
+
+## Prompt 14
+
+Ahora anteriormnete mencionaste un bug en la auntenticacion y en la seccion de roles
+
+## Prompt 15
+
+a) arregla el detalle de la comparacion que siempre regresa true pues lo que se buscaba era verificar que en la db existiera una entrada que fuera identica mediante esa comparacion. Lo de login process db por el momento es solo para debuggear no es funcional. Lo de el texto plano y password encriptada es temporalmente un boilerplate por loque asi se encuentra bien. B) Arregla el detalle del rol, cuando se cambia el estatus de la cuenta se debe hacer el .commit, renombra db_utility a db_setup, en el error de db utility sobre el id duplicado inicialmente se tenia contemplado que el sistema fuera generado en orden pero tienes razon para evitar situaciones inesperadas se debe charcar la id del rol y a que corresponde si a user o admin, en lo de create user db habria que agregar una comprobacion de rol, que puede ser gestionada mediante el proceso anteriomente mencionado o checando mediante un select. 4) por el momento no, delte debe regresar codigo 200, se debera pasar el tipo de rol explicitamente pues es posible que en el frontend un usuario sea marcado como user o admin
+
+## Prompt 16
+
+procede a ejecutar el plan

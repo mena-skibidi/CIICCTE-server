@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 from db import router as db_router
-from db_utility import db_setup
+from db_setup import db_setup
 from fastapi import FastAPI
 from telemetry import router as telemetry_router
 

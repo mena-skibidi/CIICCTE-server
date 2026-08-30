@@ -1,5 +1,5 @@
-from db_models import users
-from db_utility import engine
+from db_models import roles, users
+from db_setup import engine
 from sqlmodel import Session, select
 
 
@@ -7,6 +7,9 @@ def create_user_db(
     username: str, nombre_completo: str, password_sin_hashear: str, rol: int
 ):
     with Session(engine) as session:
+        rol_exists = session.exec(select(roles).where(roles.id == rol)).first()
+        if not rol_exists:
+            raise ValueError(f"rol {rol} no existe (debe ser 1 admin o 2 usuario)")
         # En produccion las contrasena se deben almacenar encriptadas, por el momento se almacenan en texto plano
         clave_privada = password_sin_hashear
         new_user = users(
@@ -27,6 +30,9 @@ def delete_user_db(username: str):
         user = session.exec(delete_select_statement).first()
         if user and user.account_status != "desactivada":
             user.account_status = "desactivada"
+            session.add(user)
+            session.commit()
+            session.refresh(user)
 
 
 def update_user_db(username: str, data: dict):
@@ -34,12 +40,15 @@ def update_user_db(username: str, data: dict):
         statement = select(users).where(users.username == username)
         user = session.exec(statement).first()
         if user:
+            if "rol" in data:
+                data["roles_id"] = data.pop("rol")
             if "password" in data:
-                data["password_encriptada"] = data["password"]
-                data.pop("password", None)
+                data["password_encriptada"] = data.pop("password")
+            data.pop("username", None)
 
             for key, value in data.items():
-                setattr(user, key, value)
+                if hasattr(user, key):
+                    setattr(user, key, value)
 
             session.add(user)
             session.commit()
@@ -49,7 +58,8 @@ def update_user_db(username: str, data: dict):
 def login_process_db(username: str, password: str):
     with Session(engine) as session:
         statement = select(users).where(
-            users.username == username and users.password_encriptada == password
+            users.username == username,
+            users.password_encriptada == password,
         )
         user = session.exec(statement).first()
         # TODO seguir los docs de fastapi para lidiar con la autenticacion https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#recap
