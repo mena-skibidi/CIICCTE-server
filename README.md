@@ -4,6 +4,8 @@
 
 Repositorio monolitico dedicado a la infraestructura de gestion del servidor mediante una interfaz web
 
+`Nota: debido a como funcionan los multiples componentes del proyecto, es necesario bajar imagenes de docker y paquetes de multiples repositorios, ademas existen multiples procesos de compilacion por lo que puede tardar un poco de tiempo en que el proyecto arranque, sobre todo si es la primera vez que se corre` 
+
 Este repositorio unifica los tres componentes que antes estaban separados:
 
 - `CIICCTE-server-DB/` - infraestructura de base de datos con Postgres y pgAdmin
@@ -47,8 +49,7 @@ Herramientas usadas durante el desarrollo que no forman parte del stack de produ
 
 ## Requisitos previos
 
-- docker y docker compose instalados
-- la red `db-net` se crea automaticamente al iniciar el compose
+- Una instlacion de docker funcional
 
 ## Como iniciar el proyecto
 

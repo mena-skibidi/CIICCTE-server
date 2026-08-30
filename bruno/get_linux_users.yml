@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8000/linux-users
+  url: http://localhost:8000/api/telemetry/linux-users
   auth: inherit
 
 settings:
