@@ -7,14 +7,23 @@ ALTER TABLE
 CREATE TABLE "users"(
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "linux_user" TEXT NOT NULL,
     "nombre_completo" TEXT NOT NULL,
-    "psswrd_encriptada" TEXT NOT NULL,
+    "password_encriptada" TEXT NOT NULL,
     "account_status" TEXT NOT NULL,
-    "rol_id" BIGINT NOT NULL
+    "roles_id" BIGINT NOT NULL
 );
 ALTER TABLE
     "users" ADD PRIMARY KEY("id");
+CREATE TABLE "linux_user"(
+    "id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "uid" BIGINT NOT NULL,
+    "gid" BIGINT NOT NULL,
+    "home_dir" TEXT NOT NULL,
+    "user_id" BIGINT NOT NULL
+);
+ALTER TABLE
+    "linux_user" ADD PRIMARY KEY("id");
 CREATE TABLE "containers"(
     "id" SERIAL NOT NULL,
     "nombre_container" TEXT NOT NULL,
@@ -63,6 +72,8 @@ ALTER TABLE
 ALTER TABLE
     "workspaces" ADD CONSTRAINT "workspaces_owner_id_foreign" FOREIGN KEY("owner_id") REFERENCES "users"("id");
 ALTER TABLE
-    "users" ADD CONSTRAINT "users_rol_id_foreign" FOREIGN KEY("rol_id") REFERENCES "roles"("id");
+    "users" ADD CONSTRAINT "users_roles_id_foreign" FOREIGN KEY("roles_id") REFERENCES "roles"("id");
+ALTER TABLE
+    "linux_user" ADD CONSTRAINT "linux_user_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id");
 ALTER TABLE
     "containers" ADD CONSTRAINT "containers_volume_id_foreign" FOREIGN KEY("volume_id") REFERENCES "volumes"("id");

@@ -33,7 +33,7 @@ Diagrama del esquema planeado para la base de datos (referencia grafica, no crea
 
 ![diagrama v3](.github/v3_diagram.jpg)
 
-El archivo `drawsql/v3.sql` es solo para cargar este diseno en https://drawsql.app. Las tablas reales se crean via SQLModel ORM.
+El archivo `drawsql/v4.sql` es solo para cargar este diseno en https://drawsql.app. Las tablas reales se crean via SQLModel ORM.
 
 ## Dev tools
 
@@ -158,22 +158,33 @@ CIICCTE-server/
     docker desktop db containers.png
     pg-admin dashboard.png
   drawsql/
-    v3.sql                         # solo para cargar diagramas en drawsql.app
+    v4.sql                         # solo para cargar diagramas en drawsql.app (incluye linux_user)
     README.md
   bruno/
     README.md
     get_linux_users.yml
     linux_server_details.yml
+    get_all_users.yml
+    get_user_by_id.yml
+    get_user_by_username.yml
     opencollection.yml
     post_user_admin.yml
     put_user_admin.yml
+    put_user_role_change.yml
   CIICCTE-server-DB/               # codigo relacionado a DB (sin compose propio)
   CIICCTE-server-backend-V2/
     dockerfile
+    pyproject.toml
     src/
-      main.py
-      db.py
-      datamodels.py
+      main.py                      # bootstrap FastAPI + lifespan
+      db.py                        # router /api/db
+      db_models.py                 # roles, users, linux_user
+      db_setup.py                  # engine + db_setup seed
+      db_operations.py             # CRUD + get_user/get_all
+      db_datamodels.py             # DTOs UserPublic etc
+      telemetry.py                 # router /api/telemetry
+      telemetry_operations.py      # fastfetch/pwd
+      telemetry_datamodels.py
   CIICCTE-server-frontend/
     dockerfile
     src/
@@ -184,7 +195,7 @@ CIICCTE-server/
 
 ## Notas
 
-- Las tablas de la base de datos se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db.py:29` `db_setup()` con `create_all(checkfirst=True)`), no con el archivo `drawsql/v3.sql`. Ese archivo SQL y los diagramas en `.github/v3_diagram.jpg` son solo una referencia grafica del esquema planeado (`roles`, `users`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) y sirven para cargar el diseno en https://drawsql.app.
+- Las tablas de la base de datos se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db_setup.py:8` `db_setup()` con `create_all(checkfirst=True)`), no con el archivo `drawsql/v4.sql`. Ese archivo SQL y los diagramas en `.github/v3_diagram.jpg` son solo una referencia grafica del esquema planeado (`roles`, `users`, `linux_user`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) y sirven para cargar el diseno en https://drawsql.app.
 - Al iniciar, el backend crea los roles `admin`/`usuario` y el usuario por defecto `admin` / `pwd123` si no existen.
 - Todas las credenciales estan hardcodeadas para desarrollo local y son temporales. No hay archivos `.env`.
 - La documentacion del backend esta disponible en `http://localhost:8000/docs` y `http://localhost:8000/redoc` cuando el backend esta corriendo.

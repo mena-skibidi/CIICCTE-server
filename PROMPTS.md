@@ -91,3 +91,7 @@ si adelante
 ## Prompt 21
 
 Al crear un usuario con el metodo post, regresa el codigo 200 para confirmar la cracion correcta del usuario. Cuando se modifica un usuario mediante el metodo PUT tambien regresa un codigo 200 si esta se completa exitosamente. Al correr la prueba put_user_role_change y modificar el "roles_id" del usuario "tsahur", se recibe una peticion de codigo 200, sin embargo la operacion no se lleva acabo identifica si el problema yace en el datamodel para esta operacion no soportando el atributo de rol, si algo ocurre a nivel de insercion en la db y agrega un valor de http correcto en caso de que la operacion no sea exitosa
+
+## Prompt 22
+
+Agrega un failsafe donde si el usuario se llamada admin el endpoint put de actualizar los datos de los usuario no pueda editar su rol, tambien actualizada la estructura del repo en el readme, por ultimo actualizado el archivo v3.sql dentro de drawsql para que refleje la adicion de la tabla de linux_user gestionada por sqlmodel y las relaciones con users, una vez terminado eso renombra el archivo a v4.sql

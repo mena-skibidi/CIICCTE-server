@@ -41,6 +41,9 @@ def update_user_db(username: str, data: dict):
         user = session.exec(statement).first()
         if not user:
             return None
+        # failsafe: no permitir cambiar el rol del usuario admin
+        if username == "admin" and ("rol" in data or "roles_id" in data):
+            raise PermissionError("no se puede modificar el rol del usuario admin")
         # soportar tanto `rol` (legado) como `roles_id` (usado por bruno put_user_role_change)
         if "rol" in data:
             data["roles_id"] = data.pop("rol")

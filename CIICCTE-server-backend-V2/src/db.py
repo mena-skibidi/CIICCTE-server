@@ -31,10 +31,19 @@ def delete_user(username: str):
 @router.put("/users")
 def update_user(data: update_user_datamodel):
     filtered_data = data.model_dump(exclude_unset=True)
+    # failsafe: no permitir cambiar el rol del usuario admin
+    if data.username == "admin" and (
+        "rol" in filtered_data or "roles_id" in filtered_data
+    ):
+        raise HTTPException(
+            status_code=403, detail="no se puede modificar el rol del usuario admin"
+        )
     try:
         updated = update_user_db(data.username, filtered_data)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except PermissionError as e:
+        raise HTTPException(status_code=403, detail=str(e))
     if updated is None:
         raise HTTPException(status_code=404, detail="usuario no encontrado")
     return {"message": "usuario actualizado", "username": data.username}
