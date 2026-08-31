@@ -1,0 +1,15 @@
+info:
+  name: get_linux_users_db
+  type: http
+  seq: 11
+
+http:
+  method: GET
+  url: http://localhost:8000/api/telemetry/linux-users
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

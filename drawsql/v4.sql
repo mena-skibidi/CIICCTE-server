@@ -17,10 +17,10 @@ ALTER TABLE
 CREATE TABLE "linux_user"(
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "uid" BIGINT NOT NULL,
+    "uid" BIGINT NOT NULL UNIQUE,
     "gid" BIGINT NOT NULL,
     "home_dir" TEXT NOT NULL,
-    "user_id" BIGINT NOT NULL
+    "user_id" BIGINT
 );
 ALTER TABLE
     "linux_user" ADD PRIMARY KEY("id");

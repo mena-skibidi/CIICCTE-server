@@ -31,7 +31,7 @@ Por motivos de documentacion, este es el stack de tecnologias usado para el desa
 
 Diagrama del esquema planeado para la base de datos (referencia grafica, no crea tablas):
 
-![diagrama v3](.github/v3_diagram.jpg)
+![diagrama v3](.github/v4_diagram.jpg)
 
 El archivo `drawsql/v4.sql` es solo para cargar este diseno en https://drawsql.app. Las tablas reales se crean via SQLModel ORM.
 
@@ -154,7 +154,7 @@ CIICCTE-server/
   PROMPTS.md
   AGENTS.md
   .github/
-    v3_diagram.jpg                 # diagrama del esquema planeado
+    v4_diagram.jpg                 # diagrama del esquema planeado
     docker desktop db containers.png
     pg-admin dashboard.png
   drawsql/
@@ -195,7 +195,7 @@ CIICCTE-server/
 
 ## Notas
 
-- Las tablas de la base de datos se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db_setup.py:8` `db_setup()` con `create_all(checkfirst=True)`), no con el archivo `drawsql/v4.sql`. Ese archivo SQL y los diagramas en `.github/v3_diagram.jpg` son solo una referencia grafica del esquema planeado (`roles`, `users`, `linux_user`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) y sirven para cargar el diseno en https://drawsql.app.
+- Las tablas de la base de datos se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db_setup.py:8` `db_setup()` con `create_all(checkfirst=True)`), no con el archivo `drawsql/v4.sql`. Ese archivo SQL y los diagramas en `.github/v4_diagram.jpg` son solo una referencia grafica del esquema planeado (`roles`, `users`, `linux_user`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) y sirven para cargar el diseno en https://drawsql.app.
 - Al iniciar, el backend crea los roles `admin`/`usuario` y el usuario por defecto `admin` / `pwd123` si no existen.
 - Todas las credenciales estan hardcodeadas para desarrollo local y son temporales. No hay archivos `.env`.
 - La documentacion del backend esta disponible en `http://localhost:8000/docs` y `http://localhost:8000/redoc` cuando el backend esta corriendo.

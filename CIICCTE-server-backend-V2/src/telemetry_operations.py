@@ -2,6 +2,11 @@ import asyncio
 import json
 import pwd
 
+from db_models import linux_user
+from db_setup import engine
+from sqlalchemy.exc import IntegrityError
+from sqlmodel import Session, select
+
 
 async def get_server_details():
     results = await asyncio.create_subprocess_exec(
@@ -43,3 +48,42 @@ def get_linux_users():
                 }
             )
     return {"data": users, "count": len(users)}
+
+
+def sync_linux_users():
+    host = get_linux_users()
+    inserted = 0
+    with Session(engine) as session:
+        for entry in host["data"]:
+            exists = session.exec(
+                select(linux_user).where(linux_user.uid == entry["user_id"])
+            ).first()
+            if exists:
+                continue
+            new_entry = linux_user(
+                username=entry["username"],
+                uid=entry["user_id"],
+                gid=entry["group_id"],
+                home_dir=entry["home_dir"],
+                user_id=None,
+            )
+            session.add(new_entry)
+            try:
+                session.commit()
+                inserted += 1
+            except IntegrityError:
+                session.rollback()
+    return {
+        "inserted": inserted,
+        "skipped": host["count"] - inserted,
+        "total_host": host["count"],
+    }
+
+
+def get_all_linux_users_db():
+    with Session(engine) as session:
+        rows = session.exec(select(linux_user).order_by(linux_user.username)).all()
+        return {
+            "data": [r.model_dump() for r in rows],
+            "count": len(rows),
+        }

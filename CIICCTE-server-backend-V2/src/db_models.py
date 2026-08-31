@@ -22,7 +22,7 @@ class users(SQLModel, table=True):
 class linux_user(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     username: str = Field(index=True)
-    uid: int = Field(index=True)
+    uid: int = Field(index=True, unique=True)
     gid: int
     home_dir: str
-    user_id: int = Field(foreign_key="users.id", index=True)
+    user_id: int | None = Field(default=None, foreign_key="users.id", index=True)

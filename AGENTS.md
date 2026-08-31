@@ -9,7 +9,7 @@ Repo: `https://github.com/mena-skibidi/CIICCTE-server` (antes 3 repos separados 
 - `docker-compose.yaml` — unico compose del proyecto, levanta todo el stack (db + pgadmin + backend + frontend) en la red `db-net`
 - `README.md` — documentacion principal en espanol (incluye `## Tech stack`, `## Dev tools` e imagenes de `.github/`)
 - `PROMPTS.md` — registro de prompts usados con agentes/LLMs
-- `.github/` — imagenes para el README (`v3_diagram.jpg` esquema DB, `docker desktop db containers.png`, `pg-admin dashboard.png`)
+- `.github/` — imagenes para el README (`v4_diagram.jpg` esquema DB, `docker desktop db containers.png`, `pg-admin dashboard.png`)
 - `drawsql/` — referencia del esquema (`v4.sql` solo para cargar el diagrama en https://drawsql.app, no crea tablas, + `README.md`)
 - `bruno/` — coleccion Bruno para probar endpoints (`get_linux_users.yml`, `linux_server_details.yml`, etc.)
 - `CIICCTE-server-DB/` — codigo relacionado a DB (sin compose propio)
@@ -61,7 +61,7 @@ Ports: DB `5432`, pgAdmin `8080` (`admin@admin.com` / `admin321`, hostname `db`)
 ## DB — `CIICCTE-server-DB/`
 
 - `docker-compose.yaml` en raiz define `postgres` (`ciiccte-db`) + `dpage/pgadmin4:9.17` (`db-gui`), ambos `restart: always`, volumenes `db`/`gui`.
-- `drawsql/v4.sql` es solo para cargar el diseno en https://drawsql.app — no crea tablas. El diagrama grafico del esquema planeado (`roles`, `users`, `linux_user`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) esta en `drawsql/README.md` y `.github/v3_diagram.jpg`. Las tablas reales se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db_setup.py:8` `db_setup()`), incluye `linux_user` relacionada a `users`.
+- `drawsql/v4.sql` es solo para cargar el diseno en https://drawsql.app — no crea tablas. El diagrama grafico del esquema planeado (`roles`, `users`, `linux_user`, `workspaces`, `containers`, `volumes`, `workspace_type`, `virtual_machines`) esta en `drawsql/README.md` y `.github/v4_diagram.jpg`. Las tablas reales se crean automaticamente via SQLModel ORM (`CIICCTE-server-backend-V2/src/db_setup.py:8` `db_setup()`), incluye `linux_user` relacionada a `users`.
 
 ## Conventions & gotchas
 

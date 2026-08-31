@@ -34,3 +34,7 @@ def db_setup():
             from db_operations import create_user_db
 
             create_user_db("admin", "admin", "pwd123", 1)
+
+    from telemetry_operations import sync_linux_users
+
+    sync_linux_users()

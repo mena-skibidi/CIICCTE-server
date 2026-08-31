@@ -1,0 +1,15 @@
+info:
+  name: sync_linux_users
+  type: http
+  seq: 10
+
+http:
+  method: GET
+  url: http://localhost:8000/api/telemetry/sync_linux_users
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

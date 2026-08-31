@@ -95,3 +95,23 @@ Al crear un usuario con el metodo post, regresa el codigo 200 para confirmar la 
 ## Prompt 22
 
 Agrega un failsafe donde si el usuario se llamada admin el endpoint put de actualizar los datos de los usuario no pueda editar su rol, tambien actualizada la estructura del repo en el readme, por ultimo actualizado el archivo v3.sql dentro de drawsql para que refleje la adicion de la tabla de linux_user gestionada por sqlmodel y las relaciones con users, una vez terminado eso renombra el archivo a v4.sql
+
+## Prompt 23
+
+Okay, ahora en el area de telemetry crea un endpoint get llamado sync_linux_users el cual al recibir una peticion correra la unfcion de get_linux_users y almacenara los usuariso detectados en la db en la tabla de linux_users, para el router de telemetry usa el prefijo /api/telemetry. Crea una test de bruno para llamar a sync_linux_users y otra para pedir todos los usuarios de linux
+
+## Prompt 24
+
+cuando se corre lo de get_linux_users saltarse los usuarios que ya este en la lista solo agregar los nuevos, para usar el sistema no es necesario que un user este ligado a un linux_user por lo que el campo puede ser opcional, para get_linux_user como endpoint este tiene que regresar los detalles de la db que hacen referencia a linux users, por lo que al llamar el endpoint simplemente se debera hacer la query mientras que el endpoint de sync_linux_users o mas bien la funcion que llamada para sincronizarlos debe llamarse acada vez que se llame el endpoint de sync)linux_users y en el proceso de db_setup tras crear el usuario de admin para que cuando se acceda al panel web por primera vez la seccion de linux_users ya se encuentre populada
+
+## Prompt 25
+
+El sistema esta disenado para unicamente correr en linux, ahonda mas en lo del upsert y en los detalles sin resolver
+
+## Prompt 26
+
+1. uid, 2. saltarse el home_dir, 3. agregable despues por defualt None, 4. ordernar por username, 5. no la prueba debe ser separada pues esta se correra manualmente, 6. si
+
+## Prompt 27
+
+Procede
