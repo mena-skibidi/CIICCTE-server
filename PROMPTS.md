@@ -260,3 +260,11 @@ ive changed the styling a little bit, can you change the border color to neutral
 ## Prompt 47
 
 No toques bottom component solo los elementos mencionados dentro de sidebarMainComponent
+
+## Prompt 48
+
+Hice cambios al frontend de manera manual, actualiza el agents.md para reflejar las design guideliness que sigue el proyecto actualmente, verifica si el readme refleja el estado actual del repo.
+
+## Prompt 49
+
+Sky-400 como color para elementos importantes, neutral-300 para bordes, el tamaño horizontalde los botones siendo de  9/10 es solo para los botones de la sidebar pero puede ser usado inicialmente para prototipar, los elementos rounded deben ser lg para mantener consistencia, y el texto de CIICCtE/web panel fue removido del proyecto.

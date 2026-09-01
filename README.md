@@ -6,11 +6,13 @@ Repositorio monolitico dedicado a la infraestructura de gestion del servidor med
 
 `Nota: debido a como funcionan los multiples componentes del proyecto, es necesario bajar imagenes de docker y paquetes de multiples repositorios, ademas existen multiples procesos de compilacion por lo que puede tardar un poco de tiempo en que el proyecto arranque, sobre todo si es la primera vez que se corre` 
 
-Este repositorio unifica los tres componentes que antes estaban separados:
+Este repositorio unificó los tres componentes que antes estaban separados:
 
-- `CIICCTE-server-DB/` - infraestructura de base de datos con Postgres y pgAdmin
+- `CIICCTE-server-DB/` - infraestructura de base de datos con Postgres y pgAdmin (eliminado como carpeta; `db`/`gui` ahora solo como servicios en `docker-compose.yaml`)
 - `CIICCTE-server-backend-V2/` - servidor que expone la logica del sistema y los endpoints
 - `CIICCTE-server-frontend/` - interfaz visual para interactuar con el sistema
+
+Actualmente solo quedan `CIICCTE-server-backend-V2/` y `CIICCTE-server-frontend/` como carpetas (ver `AGENTS.md`).
 
 ## Tech stack
 
