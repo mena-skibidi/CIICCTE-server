@@ -204,3 +204,59 @@ Sigue la version sin side effects, usa overflow-auto, manten las ux guidelines s
 ## Prompt 33
 
 Procede pa
+
+## Prompt 34
+
+Okay ahora crea componentes llamados DasboardTopComponent, DashboardCenterComponent, DashboardBottomComponent y DashboardCenterButtonComponent. El componente Top debera ir arnclado en la parte superior de la sidebar, el bottom component debe ir anclado en la parte infereior del componente y el center component debe ir en medio de top y bottom components con separacion entre ellos. El top component esta dedicado a mostrar detalles esteticos como CIICCTE y/o Panel web, el center component esta planeado para contener multiples buttons los cuales al ser presionados cargaran diferentes secciones dentro del main component y el bottom component contendra detalles como el username, rol de acceso, boton de configuracion y boton para hacer logout. Por el momento solo crea los componentes de top, center, bottom y el centerButtonComponent con sus detalles de styling.
+
+## Prompt 35
+
+Por el momento solo manten el componete vacio pero estilizado, tambien remueve la seccion de Notas y Estructura del repositorio del Readme
+
+## Prompt 36
+
+for the sidebar componentes such as the top, center, bottom and buttosn components remove the 8px multiple padding constraint and isntead make them take fill the horizontal space
+
+## Prompt 37
+
+SI
+
+## Prompt 38
+
+procede
+
+## Prompt 39
+
+now remove the left and right border from the sidebar innercomponents. Also For special text like for the CIICCTE word use text-4xl and blue 700, for Titles or sidebarbuttons use text-2xl and regular black, for standard text use text-xl. And create a folder inside components named Sidebar and place existing sidebarcopmonents and future sidebar components there removing the Dashbiard and DashboardSidebar prefix from the files, also create a component named TopInnerComponent that has the word CIICCTE as the text-4xl thing and below it the words Web Panel in the text-2xl styling. For the center components make it so the buttonComponent has a couple of presets: Dashboard,  Gestion Usuarios, Gestion Linux, Gestion Docker. For the bottom component create a component named BottomInnerComponent that has a text saying usuario which later will show the actual username, below that add a text saying the role type (usuario, admin and also create a new type of styling where textl will be smaller than regular text and will have the color neutral-700), add the neutral-700 styling to the role text, and add a button saying Cerrar sesion, right now only this is only a styling phase so besides that dont add weird functionality please :(
+
+## Prompt 40
+
+Remueve el borde para los innerComponent y comienza
+
+## Prompt 41
+
+okay now center vertically and horizontally the contents of the elements inside all the sidebar components and add padding to them so the texts are not touching the borders, tambien agrega hover:opacity-90 y hover:cursor cuando se hoverea el mouse sobre los botones
+
+## Prompt 42
+
+En el top component aumenta el padding interno para que las palabras CIICCTe y WebPanel no se corten por el borderdel top component, todos los botones dentro del center componet van centrados en el center, estos botones deben llenar todo el espacio horizontal el padding solo debe ser vertical, demas incrementa el padding interno de los botons. Para el bottom component usa un div donde al mismo nivel y de manera hotizontal se encuentre el usernam#rol ejemplo: usuario#admin o skibidi#user, el boton de cerrar sesion debe ocuor todo el espacio horixontal y el texto debe ser mas pequeño, tambien cambia el estilo del texto CIICCTE a blue600
+
+## Prompt 43
+
+Utiliza la solucion de min-h + py, para lo del padding usa px-2
+
+## Prompt 44
+
+Okay ya repense el diseño, migra los textos de top component al inner bottom component, pero agregalos  arriba de usuario@rol en el bottom component. Una vez hecho esto remueve los top components, y unicamente existira el center component del sidebar y el bottom component. Tambien renombra el center component a main copmonent del sidebar, todos los botones dentro del maincopmonent deberan ser acomodados en orden y no centrados verticalmente, adecua los botones a usar pt o pb y no px, py y gap. Tambien adecua los tamaños de letra a algo similar a los del bottom component, y en CIICTE web panel alinea el texto de "web panel para que verticalmente este alineado con el fondo y no flotando a nivel central del texto CIICTE por la diferencia de tamaño
+
+## Prompt 45
+
+Los mainbutton components deberan remover los border pero ahora seran rounded-lg y tendra una shadow. Por el momento usa text-lg, a partir de ahora en lugar de blue-600 se usara sky-400.
+
+## Prompt 46
+
+ive changed the styling a little bit, can you change the border color to neutral-600,  also for the sidebar main component buttons can you add a 4 gap between each other, and also can you make it so the shadow property is not only visible during the hover but also under regular cirucmstances, and remove the top and bottom borders from this components. And make the button text color neutral-600 and text-lg
+
+## Prompt 47
+
+No toques bottom component solo los elementos mencionados dentro de sidebarMainComponent
