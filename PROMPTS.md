@@ -192,3 +192,15 @@ Ahora para el frontend, a lo largo de la web app la estetica tiene que ser simil
 ## Prompt 30
 
 1.Dashboard, Screen y aparte components
+
+## Prompt 31
+
+Okay, para el frontend vamos a trabajar con la nocion de una spa, donde desde App.tsx vamos a tener algunas ¨screens¨ como login, dashboard, entre otros. Estas screen son de proposito especifico es decir login solo se va a mostrar cuando un usuario no esta autenticado y el resto del tienpo se va a tener la screen de dashboard cargada. La screen de dashboard sera el hub central para mostrar contenido y el diseño inmutable de esa screen consiste de que dashboard screen sea un comoponente vacio con un div que tome todo el espacio del viewport, este debe ser fijo y usar constraints de justify-center y display flex. Dentro de dicho div, en el lado lateral izquierdo tomando todo el espacio vertical se colocara el componente de DashboardSidebar (este componente debe tomar ese espacio, alinear las cosas con flex-col y justify-center), y tomando el resto del espacio disponible estara el componente DashboardMainContentComponent, este componente servira como proxy para cargar otros componentes. Para aclarar por el momento no crees la screen de login, solo adecua la screen de Dashboard para cumplir estos nuevos requerimientos y tambien adecua los componentes de dashboarSidebarComponent y dashboardMainContentComponent.
+
+## Prompt 32
+
+Sigue la version sin side effects, usa overflow-auto, manten las ux guidelines sobre la alineacion en base a multiplos de 8, no recuerdo solicitar la reacion de algo llamado header dashboard por lo cual si es contenido generado como boilerplate remuevelo, unicamente se requieren los componentes/divs estilizados pero sin contenido
+
+## Prompt 33
+
+Procede pa
