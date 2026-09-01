@@ -1,10 +1,15 @@
 import BottomComponent from "./BottomComponent"
 import MainComponent from "./MainComponent"
 
-function SidebarComponent() {
+type Props = {
+  active: string
+  onSelect: (label: string) => void
+}
+
+function SidebarComponent({ active, onSelect }: Props) {
   return (
     <div className="h-full w-64 shrink-0 border-r border-neutral-300 rounded-t-lg flex flex-col justify-between">
-      <MainComponent />
+      <MainComponent active={active} onSelect={onSelect} />
       <BottomComponent />
     </div>
   )

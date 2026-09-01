@@ -268,3 +268,11 @@ Hice cambios al frontend de manera manual, actualiza el agents.md para reflejar 
 ## Prompt 49
 
 Sky-400 como color para elementos importantes, neutral-300 para bordes, el tamaño horizontalde los botones siendo de  9/10 es solo para los botones de la sidebar pero puede ser usado inicialmente para prototipar, los elementos rounded deben ser lg para mantener consistencia, y el texto de CIICCtE/web panel fue removido del proyecto.
+
+## Prompt 50
+
+Okay, ahora vienen multiples procesos nuevos, para la sidebar cuando un boton/componente esta activo el color de dicho boton dbe de ser de bg-sky-700, por default la seccion activa sera la de DAshboardTelemetryComponent la cual coresponde al dashboard. Dicho dashboard debera llamar al endpoint del backend encargado de mandar datos de las especificaciones del servidor, se debera crear un folder llamado folder donde se almacenaran los componentes del mismo, se creara el componente de "card" para mostrar de manera separada los detalles del CPU, GPu y la memoria, estas cards seran almacenadas dentro de un div y presentadas en lo que anteriormente era el DashoardTelmetryCOmponent el cual Ahora se llamara DAshboardComponent. Los tipos de letra, color y elementos esteticos de las cards seran rounded-lg con border-neutral-300, los detalles de CPU,gpu y memoria vienen en formato json y pueden ser representados mediante uan table dentro de cada card. Tambien se creara un Folder para LinuxUsers donde dashboardlinuxusers sera renombrado a LinuxUsersComponent, en el se tendra un div centrado y centrando los child items, y se creara una lista donde pro cada elemento de la request recibida se tendra un div tomando todo el espacio horizontal, dentro de el habran dos divs, uno alineado a la izquierda y teniendo los detalles de la request, y del lado derecho del div alargo se colocara el otro div el cual tendra 1 boton con el texto gestionar que por el momento no hara nada
+
+## Prompt 51
+
+Como estas Cards pertenecen al dashboard iran dentro de la carpeta dashboard, las cards mostraran los datos y si ocurre un error este se logeara en la terminal pero en la card se mostrara el texto: Algo salio mal, consulta los logs. Para linux users compnent se deben mostrar todos los elementos regresados  y el orden by username funciona bien
