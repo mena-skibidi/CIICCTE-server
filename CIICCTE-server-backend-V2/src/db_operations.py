@@ -1,6 +1,8 @@
-from db_models import roles, users
-from db_setup import engine
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
+
+from db_models import linux_user, roles, users
+from db_setup import engine
 
 
 def create_user_db(
@@ -25,14 +27,18 @@ def create_user_db(
 
 def delete_user_db(username: str):
     with Session(engine) as session:
-        # Por motivos de seguridad lo mejor seria nunca borrar cuentas solo desactivarlas
+        # Toggle activa/desactivada manteniendo mismo endpoint DELETE
         delete_select_statement = select(users).where(users.username == username)
         user = session.exec(delete_select_statement).first()
-        if user and user.account_status != "desactivada":
-            user.account_status = "desactivada"
+        if user:
+            user.account_status = (
+                "desactivada" if user.account_status == "activa" else "activa"
+            )
             session.add(user)
             session.commit()
             session.refresh(user)
+            return user
+        return None
 
 
 def update_user_db(username: str, data: dict):
@@ -105,3 +111,41 @@ def get_user_db(user_id: int | None = None, username: str | None = None):
 def get_all_users_db():
     with Session(engine) as session:
         return list(session.exec(select(users)).all())
+
+
+def link_linux_user_db(linux_uid: int, user_id: int | None):
+    with Session(engine) as session:
+        lu = session.exec(select(linux_user).where(linux_user.uid == linux_uid)).first()
+        if not lu:
+            raise ValueError(f"linux_user uid {linux_uid} no existe")
+        if user_id is None:
+            lu.user_id = None
+            session.add(lu)
+            try:
+                session.commit()
+                session.refresh(lu)
+            except IntegrityError as e:
+                session.rollback()
+                raise ValueError(str(e)) from e
+            return lu
+        # Validar usuario existe y es regular activo
+        target = session.exec(select(users).where(users.id == user_id)).first()
+        if not target:
+            raise ValueError(f"usuario id {user_id} no existe")
+        # 1-1: verificar que no esté ya vinculado a otro linux_user
+        existing = session.exec(
+            select(linux_user).where(linux_user.user_id == user_id)
+        ).first()
+        if existing and existing.uid != linux_uid:
+            raise ValueError(
+                f"usuario {target.username} ya vinculado a linux_user {existing.username} (uid {existing.uid})"
+            )
+        lu.user_id = user_id
+        session.add(lu)
+        try:
+            session.commit()
+            session.refresh(lu)
+        except IntegrityError as e:
+            session.rollback()
+            raise ValueError(f"user_id {user_id} ya vinculado") from e
+        return lu

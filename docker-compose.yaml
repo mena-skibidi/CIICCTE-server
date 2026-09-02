@@ -39,11 +39,20 @@ services:
       - "8000:8000"
     networks:
       - db
+    # Equivalente a --privileged para exponer discos fisicos del host a fastfetch.
+    # Sin esto fastfetch dentro del contenedor ve solo el overlay vacio.
+    # Requiere daemon con privilegios; si no esta permitido el compose fallara al crear el contenedor.
+    privileged: true
+    pid: "host"
     volumes:
       # Se cargan estos datos del host en modo read only para detectar a los usuarios
       - /etc/passwd:/etc/passwd:ro
       - /etc/group:/etc/group:ro
       - /etc/shadow:/etc/shadow:ro
+      # Host root para fallback cuando fastfetch no ve discos (ver telemetry_operations.py:_fallback_physical_disks)
+      - /:/host:ro
+      # Docker daemon para gestionar contenedores/networks/volumes desde dentro (read-only, ver docker_operations.py)
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - db
 

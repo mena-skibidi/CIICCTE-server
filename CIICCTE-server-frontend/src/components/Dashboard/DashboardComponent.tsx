@@ -1,12 +1,25 @@
 import { useEffect, useState } from "react"
 import Card from "./Card"
 
+type PhysicalDisk = {
+  name: string
+  dev_path: string
+  kind: string
+  interconnect: string
+  size_gb: number
+  temperature: number | null
+}
+
 type ServerData = {
-  cpu_name: string
-  cpu_physical_cores: number
-  cpu_logical_cores: number
+  cpu_name: string | null
+  cpu_physical_cores: number | null
+  cpu_logical_cores: number | null
   gpu_name: string | null
-  ram_amount: number
+  ram_amount: number | null
+  disks: PhysicalDisk[]
+  disks_count: number
+  storage_total_gb: number
+  storage_available_gb: number
 }
 
 function DashboardComponent() {
@@ -41,7 +54,9 @@ function DashboardComponent() {
   }
 
   return (
-    <div className="w-full flex flex-col gap-8">
+    <div className="w-full flex flex-col justify-center items-center gap-8">
+      <h1 className="w-full text-6xl text-sky-400 pt-6 pb-6 text-center">Dashboard</h1>
+
       <div className="w-full flex flex-col lg:flex-row gap-8">
         <Card
           title="CPU"
@@ -49,9 +64,9 @@ function DashboardComponent() {
           rows={
             data
               ? [
-                  ["Nombre", data.cpu_name],
-                  ["Núcleos físicos", data.cpu_physical_cores],
-                  ["Núcleos lógicos", data.cpu_logical_cores],
+                  ["Nombre", data.cpu_name ?? "—"],
+                  ["Núcleos físicos", String(data.cpu_physical_cores ?? "—")],
+                  ["Núcleos lógicos", String(data.cpu_logical_cores ?? "—")],
                 ]
               : []
           }
@@ -64,8 +79,46 @@ function DashboardComponent() {
         <Card
           title="Memoria"
           error={error || !data}
-          rows={data ? [["Total (GB)", data.ram_amount]] : []}
+          rows={data ? [["Total (GB)", String(data.ram_amount ?? "—")]] : []}
         />
+      </div>
+
+      <div className="w-full flex flex-col lg:flex-row gap-8">
+        <Card
+          title="Almacenamiento"
+          error={error || !data}
+          rows={
+            data
+              ? [
+                  ["Unidades físicas", data.disks_count],
+                  ["Espacio total (GB)", data.storage_total_gb],
+                  ["Espacio disponible (GB)", data.storage_available_gb],
+                ]
+              : []
+          }
+        />
+        {data && data.disks.length > 0 ? (
+          data.disks.map((d) => (
+            <Card
+              key={d.dev_path || d.name}
+              title={d.name}
+              error={false}
+              rows={[
+                ["Ruta", d.dev_path || "—"],
+                ["Tipo", d.kind || "—"],
+                ["Interconexión", d.interconnect || "—"],
+                ["Tamaño (GB)", d.size_gb],
+                ["Temperatura", d.temperature !== null && d.temperature !== undefined ? `${d.temperature} °C` : "—"],
+              ]}
+            />
+          ))
+        ) : (
+          <Card
+            title="Disco Físico"
+            error={false}
+            rows={[["Estado", "Sin discos físicos detectados"]]}
+          />
+        )}
       </div>
     </div>
   )

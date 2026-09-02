@@ -36,3 +36,8 @@ class UsersResponse(BaseModel):
 
 class UserResponse(BaseModel):
     data: UserPublic
+
+
+class LinkLinuxUserRequest(BaseModel):
+    linux_uid: int
+    user_id: int | None = None

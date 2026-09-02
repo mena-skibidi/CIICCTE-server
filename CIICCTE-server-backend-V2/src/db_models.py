@@ -25,4 +25,6 @@ class linux_user(SQLModel, table=True):
     uid: int = Field(index=True, unique=True)
     gid: int
     home_dir: str
-    user_id: int | None = Field(default=None, foreign_key="users.id", index=True)
+    user_id: int | None = Field(
+        default=None, foreign_key="users.id", unique=True, index=True
+    )

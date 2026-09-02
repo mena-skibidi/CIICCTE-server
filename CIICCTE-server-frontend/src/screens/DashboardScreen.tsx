@@ -1,5 +1,5 @@
 import { useState } from "react"
-import DashboardMainContentComponent from "../components/DashboardMainContentComponent"
+import ContentProxyComponent from "../components/ContentProxy/ContentProxyComponent"
 import SidebarComponent from "../components/Sidebar/SidebarComponent"
 
 function DashboardScreen() {
@@ -8,7 +8,7 @@ function DashboardScreen() {
     <div className="fixed inset-0 flex justify-center bg-white">
       <div className="flex w-full">
         <SidebarComponent active={active} onSelect={setActive} />
-        <DashboardMainContentComponent active={active} />
+        <ContentProxyComponent active={active} />
       </div>
     </div>
   )

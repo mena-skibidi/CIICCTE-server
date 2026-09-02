@@ -1,14 +1,21 @@
-from db_datamodels import create_user_datamodel, login_data, update_user_datamodel
+from fastapi import APIRouter, HTTPException, Query
+
+from db_datamodels import (
+    LinkLinuxUserRequest,
+    create_user_datamodel,
+    login_data,
+    update_user_datamodel,
+)
 from db_operations import (
     _to_public,
     create_user_db,
     delete_user_db,
     get_all_users_db,
     get_user_db,
+    link_linux_user_db,
     login_process_db,
     update_user_db,
 )
-from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter(prefix="/api/db", tags=["db"])
 
@@ -24,8 +31,14 @@ def create_user(data: create_user_datamodel):
 
 @router.delete("/users")
 def delete_user(username: str):
-    delete_user_db(username)
-    return {"message": "usuario desactivado", "username": username}
+    user = delete_user_db(username)
+    if user is None:
+        raise HTTPException(status_code=404, detail="usuario no encontrado")
+    return {
+        "message": f"usuario {user.account_status}",
+        "username": username,
+        "account_status": user.account_status,
+    }
 
 
 @router.put("/users")
@@ -52,6 +65,20 @@ def update_user(data: update_user_datamodel):
 @router.post("/login")
 def login_process(data: login_data):
     login_process_db(data.username, data.password)
+
+
+@router.put("/linux-users/link")
+def link_linux_user(data: LinkLinuxUserRequest):
+    try:
+        lu = link_linux_user_db(data.linux_uid, data.user_id)
+    except ValueError as e:
+        msg = str(e)
+        if "no existe" in msg:
+            raise HTTPException(status_code=404, detail=msg)
+        if "ya vinculado" in msg:
+            raise HTTPException(status_code=409, detail=msg)
+        raise HTTPException(status_code=400, detail=msg)
+    return {"message": "vinculo actualizado", "data": lu.model_dump()}
 
 
 @router.get("/users")

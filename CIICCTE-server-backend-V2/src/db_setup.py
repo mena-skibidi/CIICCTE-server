@@ -1,5 +1,6 @@
-from db_models import roles, users
 from sqlmodel import Session, SQLModel, create_engine, select
+
+from db_models import roles, users
 
 engine = create_engine("postgresql://dbuser:labtest321@db:5432/labdb", echo=True)
 
