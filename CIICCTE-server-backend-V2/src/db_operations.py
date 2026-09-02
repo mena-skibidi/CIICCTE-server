@@ -12,8 +12,9 @@ def create_user_db(
         rol_exists = session.exec(select(roles).where(roles.id == rol)).first()
         if not rol_exists:
             raise ValueError(f"rol {rol} no existe (debe ser 1 admin o 2 usuario)")
-        # En produccion las contrasena se deben almacenar encriptadas, por el momento se almacenan en texto plano
-        clave_privada = password_sin_hashear
+        from auth import hash_password
+
+        clave_privada = hash_password(password_sin_hashear)
         new_user = users(
             username=username,
             nombre_completo=nombre_completo,
@@ -62,7 +63,9 @@ def update_user_db(username: str, data: dict):
                     f"rol {rol_id} no existe (debe ser 1 admin o 2 usuario)"
                 )
         if "password" in data:
-            data["password_encriptada"] = data.pop("password")
+            from auth import hash_password
+
+            data["password_encriptada"] = hash_password(data.pop("password"))
         data.pop("username", None)
 
         for key, value in data.items():
@@ -76,17 +79,27 @@ def update_user_db(username: str, data: dict):
 
 
 def login_process_db(username: str, password: str):
+    from auth import verify_password
+
     with Session(engine) as session:
-        statement = select(users).where(
-            users.username == username,
-            users.password_encriptada == password,
-        )
+        statement = select(users).where(users.username == username)
         user = session.exec(statement).first()
-        # TODO seguir los docs de fastapi para lidiar con la autenticacion https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/#recap
-        if user:
-            print("Usuario valido")
-        else:
+        if not user:
             print("Usuario invalido")
+            return None
+        if user.account_status != "activa":
+            print("Usuario desactivado")
+            return None
+        # Soporte migracion: si hash no verifica pero plaintext coincide, aceptar
+        if verify_password(user.password_encriptada, password):
+            print("Usuario valido")
+            return user
+        # Fallback plaintext (para DBs antiguas sin down -v)
+        if user.password_encriptada == password:
+            print("Usuario valido (plaintext fallback)")
+            return user
+        print("Usuario invalido")
+        return None
 
 
 def _to_public(user: users) -> dict:

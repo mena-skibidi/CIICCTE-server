@@ -64,7 +64,19 @@ def update_user(data: update_user_datamodel):
 
 @router.post("/login")
 def login_process(data: login_data):
-    login_process_db(data.username, data.password)
+    from auth import create_token
+
+    user = login_process_db(data.username, data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="credenciales invalidas")
+    token = create_token(user.username, user.roles_id)
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "username": user.username,
+        "roles_id": user.roles_id,
+        "nombre_completo": user.nombre_completo,
+    }
 
 
 @router.put("/linux-users/link")

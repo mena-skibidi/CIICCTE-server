@@ -2,7 +2,7 @@ import { useState } from "react"
 import ContentProxyComponent from "../components/ContentProxy/ContentProxyComponent"
 import SidebarComponent from "../components/Sidebar/SidebarComponent"
 
-function DashboardScreen() {
+function AdminScreen() {
   const [active, setActive] = useState("Dashboard")
   return (
     <div className="fixed inset-0 flex justify-center bg-white">
@@ -14,4 +14,4 @@ function DashboardScreen() {
   )
 }
 
-export default DashboardScreen
+export default AdminScreen
